@@ -21,15 +21,7 @@ class ImageColorExtractorController extends Controller
      */
     public function index()
     {
-        // Recover images from DB using the model, ordering descending by id and showing 10
-        // results per page.
-        $imgs = ImageColorExtractor::orderByDesc('id')->paginate(10);
 
-        // Images count
-        $imgs_total = ImageColorExtractor::count();
-
-        // Load the view
-        return view( 'imgcolors.list', ['imgs' => $imgs, 'imgs_total' => $imgs_total] );
     }
 
     /**
