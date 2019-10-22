@@ -4,10 +4,11 @@
 
         <div class="row">
             <div class="col-md-6 border" style="text-align: center;">
-                <h4>
-                    Predominant color: <strong>{{ $color_code }}</strong>
+                <h4 style="padding: 15px;">
+                    Predominant color: <strong style="background-color: {{ $color_code }};
+                        color: white; padding: 5px;">{{ $color_code
+                    }}</strong>
                 </h4>
-                <br>
                 <img alt="Your uploaded image" src="{{ asset(config('filesystems.imagescolors')
                 .DIRECTORY_SEPARATOR.$img) }}"
                      width="50%"
@@ -15,13 +16,12 @@
             </div>
 
             {{-- COLOR TABLE --}}
-            <div class="col-md-6 border table-responsive-sm table-responsive-md">
-                <h4>
+            <div class="col-md-6 border table-responsive-sm table-responsive-md"
+                 style="text-align: center;">
+                <h4 style="padding: 15px;">
                     <strong>{{ $color_code }}</strong> is closest
                     to {{ $closest_color }}
                 </h4>
-                <br>
-
                 <table class="table table-striped">
                     @php
                         $col = 0;
