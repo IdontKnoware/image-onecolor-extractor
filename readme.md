@@ -27,6 +27,6 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## About project
 
-The tool returns the higher pixel count of a single color of an image.
+The tool returns predominant color of an image.
 
 
