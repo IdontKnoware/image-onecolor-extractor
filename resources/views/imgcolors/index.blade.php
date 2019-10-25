@@ -10,7 +10,9 @@
         <div class="row">
             <div class="col-md-6 border table-responsive-sm table-responsive-md"
                  style="text-align: center;">
-                <h4 id="predominant_color" style="padding: 15px;">No image uploaded</h4>
+                <h4 id="predominant_color" class="" style="padding:
+                15px;">No
+                    image uploaded</h4>
                 <span id="img_file"></span>
             </div>
 
@@ -81,8 +83,7 @@
                     </div>
                     <br><br><br>
                     <div class="form-group">
-                        <button id="submit_form" type="submit" class="btn
-                            btn-primary">Upload</button>
+                        <button id="submit_form" type="submit" class="upload-button">Upload</button>
                     </div>
                 </div>
             </div>
@@ -103,15 +104,14 @@
                     processData: false,
                     success: function (data) {
                         $('#message').css('display', 'block')
-                                     .html(data.message)
+                                     .html(data.message).delay(1000).fadeOut(500)
                                      .addClass(data.class_name);
-                        $('#img_file').html(data.img_file);
+                        $('#img_file').html(data.img_file).addClass
+                        ('uploaded-img-predominant-color');
                         $('#predominant_color').html('Predominant color: ' + data
                             .predominant_color);
                         $('#color_compare').html(data.predominant_color + ' is closest to ' +
                             data.closest_color);
-
-                        console.log(data);
                     }
                 })
             });

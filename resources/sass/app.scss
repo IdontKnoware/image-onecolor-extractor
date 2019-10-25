@@ -5,8 +5,18 @@
 // Variables
 @import 'variables';
 
+// Buttons
+@import 'buttons';
+
+// Mixins
+@import 'mixins';
+
+// Uploaded image
+@import 'uploaded-img';
+
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
 
 .navbar-laravel {
   background-color: #fff;

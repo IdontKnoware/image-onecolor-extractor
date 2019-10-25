@@ -113,9 +113,8 @@ class ImageColorExtractorController extends Controller
                 }
             }
 
-            // Load view with data
-//            return view('imgcolors.index')->with('color_code', $most_used['color'])->with('table_colors', $colors)->with('closest_color', $closest_color)->with('img', $image->basename);
 
+            // Return img data
             return response()->json([
                 'message'        => 'Image has uploaded successfully',
                 'img_name'       => $image->basename,
@@ -128,7 +127,9 @@ class ImageColorExtractorController extends Controller
                 'class_name'     => 'alert-success'
             ]);
 
-        } else {
+        }
+        // File is not valid
+        else {
             return response()->json([
                 'message'        => $validation->errors()->all(),
                 'uploaded_image' => '',
