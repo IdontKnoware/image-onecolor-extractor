@@ -1,0 +1,14 @@
+.uploaded-img-predominant-color {
+    padding: 0.25rem;
+    background-color: #f8fafc;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    max-width: 100%;
+    height: auto;
+
+    &:hover {
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        align-content: center;
+    }
+}
