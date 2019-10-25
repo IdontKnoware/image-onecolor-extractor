@@ -117,13 +117,13 @@ class ImageColorExtractorController extends Controller
 //            return view('imgcolors.index')->with('color_code', $most_used['color'])->with('table_colors', $colors)->with('closest_color', $closest_color)->with('img', $image->basename);
 
             return response()->json([
-                'message'        => 'Image Upload Successfully',
+                'message'        => 'Image has uploaded successfully',
                 'img_name'       => $image->basename,
                 'img_file'       => '<img src="'.config('filesystems.imagescolors') .'/'
                     .$image->basename. '" class="img-thumbnail"
             width="300" />',
                 'table_colors'   => $colors,
-                'color_code'     => $most_used['color'],
+                'predominant_color' => $most_used['color'],
                 'closest_color'  => $closest_color,
                 'class_name'     => 'alert-success'
             ]);

@@ -4,33 +4,19 @@
         <span class="invalid-feedback" role="alert">
         </span>
     @endif
-
+    <h3 align="center">Extract predominant color of an image using Laravel</h3>
+    <br><br>
     <div class="container-fluid">
         <div class="row">
-            @if(!empty($color_code))
-                @php
-                    dd()
-                @endphp
-                <h4 style="padding: 15px;">
-                    Predominant color: <strong style="background-color: {{ $color_code }};
-                        color: white; padding: 5px;">{{ $color_code }}</strong>
-                </h4>
-                <img alt="Your uploaded image" src="{{ asset(config('filesystems.imagescolors')
-                        .DIRECTORY_SEPARATOR.$img_name) }}" width="50%" class=""/>
-            @endif
-
             <div class="col-md-6 border table-responsive-sm table-responsive-md"
-                 style="text-align: center;"><span id="img_file"></span>
+                 style="text-align: center;">
+                <h4 id="predominant_color" style="padding: 15px;">No image uploaded</h4>
+                <span id="img_file"></span>
             </div>
 
             {{-- COLOR TABLE --}}
-            <div class="col-md-6 border table-responsive-sm table-responsive-md"
-                 style="text-align: center;">
-                @if(!empty($color_code))
-                    <h4 style="padding: 15px;">
-                        <strong>{{ $color_code }}</strong> is closest to {{ $closest_color }}
-                    </h4>
-                @endif
+            <div class="col-md-6 border table-responsive-sm table-responsive-md" style="text-align: center;">
+                <h4 id="color_compare" style="padding: 15px;"></h4>
                 <table class="table table-striped">
                     @php
                         $col = 0;
@@ -80,6 +66,7 @@
             </div>
         </div>
 
+        <br><br>
         <span class="alert" id="message" style="display: none"></span>
 
         <form id="img_form" class="my-2 border p-5" method="POST" enctype="multipart/form-data">
@@ -118,8 +105,13 @@
                         $('#message').css('display', 'block')
                                      .html(data.message)
                                      .addClass(data.class_name);
-
                         $('#img_file').html(data.img_file);
+                        $('#predominant_color').html('Predominant color: ' + data
+                            .predominant_color);
+                        $('#color_compare').html(data.predominant_color + ' is closest to ' +
+                            data.closest_color);
+
+                        console.log(data);
                     }
                 })
             });
