@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageStoreRequest;
 use Illuminate\Http\Request;
-use App\ImageColorExtractor;
-use Illuminate\Support\Facades\Storage;
+//use App\ImageColorExtractor;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use ImagickPixel;
+//use ImagickPixel;
 use Intervention\Image\Facades\Image;
 use League\ColorExtractor\Color;
-use League\ColorExtractor\ColorExtractor;
+//use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 
 class ImageColorExtractorController extends Controller
@@ -113,12 +113,12 @@ class ImageColorExtractorController extends Controller
                 }
             }
 
-
-            // Return img data
-            return response()->json([
+            // Save response data
+            $response = response()->json([
                 'message'        => 'Image has uploaded successfully',
                 'img_name'       => $image->basename,
-                'img_file'       => '<img src="'.config('filesystems.imagescolors') .'/'
+                'img_file'       => '<img id="img_file" src="'.config('filesystems.imagescolors')
+                    .'/'
                     .$image->basename. '" class="img-thumbnail"
             width="300" />',
                 'table_colors'   => $colors,
@@ -127,6 +127,11 @@ class ImageColorExtractorController extends Controller
                 'class_name'     => 'alert-success'
             ]);
 
+            // Destroy actual image from server storage
+            //unlink( $request->file( 'input_img' )->store(config('filesystems.imagescolors')));
+
+            // Return response to AJAX call
+            return $response;
         }
         // File is not valid
         else {

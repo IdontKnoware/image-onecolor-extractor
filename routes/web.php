@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::get('/', 'ImageColorExtractorController@index');
 
 # Operations
-Route::resource( 'images', 'ImageColorExtractorController' );
+//Route::resource( 'images', 'ImageColorExtractorController' );
 
 # Submit form to server via AJAX
 Route::post('/action', 'ImageColorExtractorController@extractImgColor')->name('extractimgcolor.action');

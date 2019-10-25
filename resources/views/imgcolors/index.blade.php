@@ -1,67 +1,50 @@
 @extends('layouts.master')
 @section('content')
+
     @if($errors->has('img_input') )
         <span class="invalid-feedback" role="alert">
         </span>
     @endif
+
+    {{-- Image modal --}}
+    @extends('layouts.modal')
+
     <h3 align="center">Extract predominant color of an image using Laravel</h3>
     <br><br>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 border table-responsive-sm table-responsive-md"
                  style="text-align: center;">
-                <h4 id="predominant_color" class="" style="padding:
-                15px;">No
-                    image uploaded</h4>
-                <span id="img_file"></span>
+                {{-- Predominant color title and uploaded image --}}
+                <h4 id="predominant_color" style="padding:15px;">No image uploaded</h4>
+                <span id="span_img_file"></span>
             </div>
 
             {{-- COLOR TABLE --}}
-            <div class="col-md-6 border table-responsive-sm table-responsive-md" style="text-align: center;">
+            <div class="col-md-6 border table-responsive-sm table-responsive-md"
+                 style="text-align: center;">
+                @extends('layouts.colortable')
+                {{-- Closest color title --}}
                 <h4 id="color_compare" style="padding: 15px;"></h4>
                 <table class="table table-striped">
                     @php
                         $col = 0;
                     @endphp
                     <tr>
-                        @foreach($table_colors as $name => $color)
+                        @foreach( $table_colors as $name => $color )
                             @php
-                                if($col == 4){
+                                if( $col == 4 ){
                                     echo '</tr>';
                                     $col = 1;
-                                }else{
+                                } else {
                                     $col++;
                                 }
                             @endphp
-
-                            @if( !empty($closest_color) )
-                                @if($color != $closest_color)
-                                    <td id="{{ $name }}" style="width: 50px; height: 50px;
-                                        background-color: {{ $color }}; padding: 5px; border: 0px
-                                        solid black;
-                                        opacity: 0.2; filter: alpha(opacity=50);">
-                                        {{ ucfirst($name) }}
-                                        <br>
-                                        {{ $color }}
-                                    </td>
-                                @else
-                                    <td id="{{ $name }}" style="width: 50px; height: 50px;
-                                        background-color: {{ $color }}; padding: 5px; border: 5px
-                                        solid black;">
-                                        {{ ucfirst($name) }}
-                                        <br>
-                                        {{ $color }}
-                                    </td>
-                                @endif
-                            @else
-                                <td id="{{ $name }}" style="width: 50px; height: 50px;
-                                    background-color: {{ $color }}; padding: 5px; border: 0px
-                                    solid black;">
-                                    {{ ucfirst($name) }}
-                                    <br>
-                                    {{ $color }}
-                                </td>
-                            @endif
+                            <td id="table-td" style="background-color: {{ $color }};">
+                                {{ ucfirst( $name ) }}
+                                <br>
+                                {{ $color }}
+                            </td>
                         @endforeach
                     </tr>
                 </table>
@@ -77,9 +60,7 @@
                 <div class="col-md-9">
                     <div class="custom-file">
                         <label>Select Image for Upload</label>
-                        <input type="file" class="form-control col-sm-10" name="input_img"
-                               id="input_img"
-                               accept="image/*" required>
+                        <input type="file" class="form-control col-sm-10" name="input_img" id="input_img" accept="image/*" required>
                     </div>
                     <br><br><br>
                     <div class="form-group">
@@ -89,32 +70,68 @@
             </div>
         </form>
     </div>
+@endsection
 @section('javascript')
     <script>
+        //////////// AJAX Call ///////////////
         $(document).ready(function () {
             $('#img_form').on('submit', function (event) {
                 event.preventDefault();
                 $.ajax({
-                    url: "{{ route('extractimgcolor.action') }}",
-                    method: "POST",
-                    data: new FormData(this),
-                    dataType: 'JSON',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
+                    url         : "{{ route('extractimgcolor.action') }}",
+                    method      : "POST",
+                    data        : new FormData(this),
+                    dataType    : 'JSON',
+                    contentType : false,
+                    cache       : false,
+                    processData : false,
+
                     success: function (data) {
                         $('#message').css('display', 'block')
-                                     .html(data.message).delay(1000).fadeOut(500)
-                                     .addClass(data.class_name);
-                        $('#img_file').html(data.img_file).addClass
+                            .html(data.message).delay(1000).fadeOut(500)
+                            .addClass(data.class_name);
+
+                        $('#span_img_file').html(data.img_file).addClass
                         ('uploaded-img-predominant-color');
-                        $('#predominant_color').html('Predominant color: ' + data
-                            .predominant_color);
+
+                        $('#predominant_color').html('Predominant color: <span ' +
+                            'style="background-color: ' + data.predominant_color + '; padding: ' +
+                            '5px; color: white;">' + data
+                                .predominant_color + '</span>');
+
                         $('#color_compare').html(data.predominant_color + ' is closest to ' +
                             data.closest_color);
-                    }
+                    },
+                    //TODO - Controlar error response
                 })
             });
         });
+
+        ///////////// Image MODAL //////////////////
+        // Get the image modal
+        var modal = $('#myModal');
+
+        // Get uploaded image and insert into modal
+        var img_file = $('#span_img_file');
+        var modalImg = $('#img01');
+        var captionText = $('#modal-caption');
+
+        // Show the modal
+        img_file.click(function () {
+            console.log($(this).first());
+
+            modal.css("display", "block");
+            modalImg.attr("src", $('#img_file').attr("src"));
+            captionText.html($(this).attr("alt"));
+        });
+
+        // 'X' button for close the modal
+        var spanCloseModal = $('.close');
+
+        spanCloseModal.click(function () {
+            console.log("close modal");
+            modal.css("display", "none");
+        });
+
     </script>
 @endsection
