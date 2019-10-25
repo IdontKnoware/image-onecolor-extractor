@@ -24,8 +24,7 @@ class ImageStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //'input_img' => 'sometimes|file|image|mimes:jpg,png,gif,webp|max:2048|required'
-            'input_img' => 'required'
+            'input_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
     }
 }

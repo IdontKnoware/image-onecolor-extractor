@@ -12,15 +12,16 @@ use Illuminate\Http\Request;
 |
 */
 
-# Home
-Route::get('/', function () {
-    return view('imgcolors.create');
-});
+# Entrance app
+Route::get('/', 'ImageColorExtractorController@index');
 
-# Image color operations
-Route::resource( 'images', 'ImageColorExtractorController' )->middleware('deny');
+# Operations
+Route::resource( 'images', 'ImageColorExtractorController' );
 
-# To home if not found
+# Submit form to server via AJAX
+Route::post('/action', 'ImageColorExtractorController@extractImgColor')->name('extractimgcolor.action');
+
+# Fallback
 Route::fallback( function() {
     return redirect('/');
 });

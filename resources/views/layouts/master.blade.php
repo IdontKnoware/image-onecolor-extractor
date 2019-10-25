@@ -4,23 +4,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="SDD Brandcare - Prova tècnica Carles Malvesí">
-        <title>{{ config('app.name') }} - @yield('page_title')</title>
-
-        {{-- Bootstrap --}}
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
         <link rel="stylesheet" href="{{ url('css/bootstrap.css') }}">
+
+        <title>{{ config('app.name') }} - @yield('page_title')</title>
     </head>
 
     <body class="container p-3">
-        @section('navigation')
-        <ul class="nav nav-pills my-3">
-            <li class="nav-item mr-2">
-                <a href="{{ route('images.create') }}" class="nav-link active">Upload image</a>
-            </li>
-            <li class="nav-item mr-2">
-                <!--<a href="{{ route('images.index') }}" class="nav-link">View your images</a>-->
-            </li>
-        </ul>
-        @show
+
 
         <h2>@yield('page_title')</h2>
 
@@ -36,6 +29,8 @@
                             Brandcare</a></strong> creada per <a href="https://www.linkedin.com/in/carlesmalvesi/" target="_blank">{{ $creator }}</a></p>
             </footer>
         @show
+
+        @yield('javascript')
     </body>
 </html>
 
