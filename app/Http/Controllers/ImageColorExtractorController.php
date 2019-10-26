@@ -6,6 +6,7 @@ use App\Http\Requests\ImageStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\Response;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\Palette;
 
@@ -51,14 +52,14 @@ class ImageColorExtractorController extends Controller
      */
     public function extractImgColor(ImageStoreRequest $request)
     {
-        //TODO: Fer servir l'ImageStoreRequest per passar validació
-
-        $validation = Validator::make( $request->all(), [
-            'input_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ] );
-
         // File it's an image
-        if( $validation->passes() ) {
+        if( $request->validated() ) {
+
+            // Empties out storage directory before storages new files
+            if( count( scandir( config( 'filesystems.imagescolors' ) ) ) > 1 ) {
+                array_map('unlink', glob(config( 'filesystems.imagescolors' )."/*.*" ));
+            }
+
             $img_path = $request->file( 'input_img' )->store( config( 'filesystems.imagescolors' ) );
 
             // Creates copy of image
@@ -130,20 +131,10 @@ class ImageColorExtractorController extends Controller
                 'class_name'        => 'alert-success'
             ] );
 
-            // Destroy actual image from server storage
-            //unlink( $request->file( 'input_img' )->store(config('filesystems.imagescolors')));
+            // Frees memory associated with the current image instance before the PHP script ends
+            $image->destroy();
 
             // Return response to AJAX call
-            return $response;
-        }
-        // File is not valid
-        else {
-            $response = response()->json( [
-                'message'        => $validation->errors()->all(),
-                'uploaded_image' => '',
-                'class_name'     => 'alert-danger'
-            ] );
-
             return $response;
         }
     }

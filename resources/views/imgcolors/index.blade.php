@@ -81,9 +81,9 @@
                         processData: false
                     });
 
-                    request.done(function (data) {
+                    request.done(function ( data ) {
                         // Title above uploaded image
-                        $('#predominant_color').html(
+                        $( '#predominant_color' ).html(
                             'Predominant color: ' +
                             '<span ' + 'style="background-color: ' + data.predominant_color + '; ' +
                             'padding: ' + '5px; ' +
@@ -92,23 +92,28 @@
                         );
 
                         // Uploaded image
-                        $('#span_img_file').html(data.img_file);
+                        $( '#span_img_file' ).html( data.img_file );
 
                         // Title above colors table
-                        $('#color_compare').html(data.predominant_color + ' is closest to ' +
-                            data.closest_color);
+                        $( '#color_compare' ).html( data.predominant_color + ' is closest to ' +
+                            data.closest_color );
 
                         // Info message
-                        $('#message').css('display', 'block')
-                            .html(data.message).delay(1000).fadeOut(500)
-                            .addClass(data.class_name);
+                        $( '#message' ).css( 'display', 'block' )
+                                       .html( data.message )
+                                       .delay( 1000 )
+                                       .fadeOut( 500 )
+                                       .addClass( data.class_name );
                     });
 
-                    //TODO: La resposta del Controller quan no és imatge no arriba correctament.
-                    request.fail(function (jqXHR, textStatus, data) {
-                        $('#message').css('display', 'block')
-                            .html('Error. Try again').delay(1000).fadeOut(500)
-                            .addClass('alert-danger');
+                    request.fail(function ( jqXHR, textStatus, data ) {
+                        let errorMessage = JSON.parse( jqXHR.responseText );
+
+                        $( '#message' ).css( 'display', 'block' )
+                                       .html( '<b>Error:</b>  ' + errorMessage )
+                                       .delay( 2000 )
+                                       .fadeOut( 1100 )
+                                       .addClass( 'alert-danger' );
                     });
                 });
 

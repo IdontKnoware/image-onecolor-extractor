@@ -14,11 +14,9 @@
 # Entrance app route
 Route::get( '/', 'ImageColorExtractorController@index' );
 
-# Operations
-//Route::resource( 'images', 'ImageColorExtractorController' );
-
 # Submits form to server via AJAX. See 'index.blade.php' for detail
-Route::post( '/action', 'ImageColorExtractorController@extractImgColor' )->name( 'extractimgcolor.action' );
+Route::post( '/action', 'ImageColorExtractorController@extractImgColor' )->name( 'extractimgcolor.action' )
+                                                                         ->middleware( 'checkimgcolordir' );
 
 # Fallback
 Route::fallback( function() {
