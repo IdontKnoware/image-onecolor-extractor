@@ -4,19 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageStoreRequest;
 use Illuminate\Http\Request;
-//use App\ImageColorExtractor;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-//use ImagickPixel;
 use Intervention\Image\Facades\Image;
 use League\ColorExtractor\Color;
-//use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
 
 class ImageColorExtractorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Main and unique view of the app
      *
      * @return \Illuminate\Http\Response
      */
@@ -113,18 +109,17 @@ class ImageColorExtractorController extends Controller
                 }
             }
 
-            // Save response data
+            // JSONize response data
             $response = response()->json([
-                'message'        => 'Image has uploaded successfully',
-                'img_name'       => $image->basename,
-                'img_file'       => '<img id="img_file" src="'.config('filesystems.imagescolors')
-                    .'/'
-                    .$image->basename. '" class="img-thumbnail"
-            width="300" />',
-                'table_colors'   => $colors,
+                'message'           => 'Image has uploaded successfully',
+                'img_name'          => $image->basename,
+                'img_file'          => '<img id="img_file" src="'.config('filesystems.imagescolors')
+                                                                 .'/' .$image->basename
+                                                                 . '" class="img-thumbnail"width="300" />',
+                'table_colors'      => $colors,
                 'predominant_color' => $most_used['color'],
-                'closest_color'  => $closest_color,
-                'class_name'     => 'alert-success'
+                'closest_color'     => $closest_color,
+                'class_name'        => 'alert-success'
             ]);
 
             // Destroy actual image from server storage
@@ -142,6 +137,7 @@ class ImageColorExtractorController extends Controller
             ]);
         }
     }
+
 
     /**
      * Show the form for creating a new resource.

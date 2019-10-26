@@ -6,12 +6,12 @@
         </span>
     @endif
 
-    {{-- Image modal --}}
-    @extends('layouts.modal')
-
     <h3 align="center">Extract predominant color of an image using Laravel</h3>
     <br><br>
     <div class="container-fluid">
+
+        @extends('layouts.modal')
+
         <div class="row">
             <div class="col-md-6 border table-responsive-sm table-responsive-md"
                  style="text-align: center;">
@@ -23,7 +23,6 @@
             {{-- COLOR TABLE --}}
             <div class="col-md-6 border table-responsive-sm table-responsive-md"
                  style="text-align: center;">
-                @extends('layouts.colortable')
                 {{-- Closest color title --}}
                 <h4 id="color_compare" style="padding: 15px;"></h4>
                 <table class="table table-striped">
@@ -87,51 +86,53 @@
                     processData : false,
 
                     success: function (data) {
+                        // Info message
                         $('#message').css('display', 'block')
-                            .html(data.message).delay(1000).fadeOut(500)
-                            .addClass(data.class_name);
+                                     .html(data.message).delay(1000).fadeOut(500)
+                                     .addClass(data.class_name);
 
-                        $('#span_img_file').html(data.img_file).addClass
-                        ('uploaded-img-predominant-color');
-
+                        // Title above uploaded image
                         $('#predominant_color').html('Predominant color: <span ' +
                             'style="background-color: ' + data.predominant_color + '; padding: ' +
                             '5px; color: white;">' + data
                                 .predominant_color + '</span>');
 
+                        // Uploaded image
+                        $('#span_img_file').html(data.img_file);
+
+                        // Title above colors table
                         $('#color_compare').html(data.predominant_color + ' is closest to ' +
                             data.closest_color);
+
                     },
                     //TODO - Controlar error response
+                    error: function (data) {
+                        $('#message').css('display', 'block')
+                                     .html(data.message).delay(1000).fadeOut(500)
+                                     .addClass(data.class_name);
+                    }
                 })
             });
         });
 
         ///////////// Image MODAL //////////////////
-        // Get the image modal
+        // Get the entire modal
         var modal = $('#myModal');
 
-        // Get uploaded image and insert into modal
-        var img_file = $('#span_img_file');
+        // Get modal <img> tag
         var modalImg = $('#img01');
-        var captionText = $('#modal-caption');
 
-        // Show the modal
-        img_file.click(function () {
-            console.log($(this).first());
-
+        // Get uploaded image for use in modal
+        $('#span_img_file').click(function () {
             modal.css("display", "block");
             modalImg.attr("src", $('#img_file').attr("src"));
-            captionText.html($(this).attr("alt"));
         });
 
-        // 'X' button for close the modal
-        var spanCloseModal = $('.close');
+        // 'X' button
+        var spanCloseModal = $('.close-modal');
 
         spanCloseModal.click(function () {
-            console.log("close modal");
             modal.css("display", "none");
         });
-
     </script>
 @endsection

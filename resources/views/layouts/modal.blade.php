@@ -1,7 +1,8 @@
 @section('modal')
     <div id="myModal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-img" id="img01">
-        <div id="modal-caption"></div>
+        {{-- Close button --}}
+        <span class="close-modal">&times;</span>
+        {{-- Uploaded image --}}
+        <img id="img01" class="modal-img">
     </div>
-@endsection
+@show

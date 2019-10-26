@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,15 +18,13 @@
         @includeWhen(Session::has('success'), 'layouts.success')
         @includeWhen($errors->any(), 'layouts.error')
 
+        {{-- Main content --}}
         @yield('content')
 
-        @section('footer')
-            <footer class="page-footer font-small p-4 bg-light">
-                <p>Prova tècnica de <strong><a href="http://www.sddbrandcare.com/" target="_blank">SDD
-                            Brandcare</a></strong> creada per <a href="https://www.linkedin.com/in/carlesmalvesi/" target="_blank">{{ $creator }}</a></p>
-            </footer>
-        @show
+        {{-- Footer page --}}
+        @extends('layouts.footer')
 
+        {{-- Scripts section --}}
         @yield('javascript')
     </body>
 </html>
