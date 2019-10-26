@@ -14,92 +14,100 @@ class ImageColorExtractorController extends Controller
     /**
      * Main and unique view of the app
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        // Colors to match
-        $colors = ['aqua' => '#00FFFF',
-            'black' => '#000000',
-            'blue' => '#0000FF',
-            'fuchsia' => '#FF00FF',
-            'gray' => '#808080',
-            'green' => '#008000',
-            'lime' => '#00FF00',
-            'maroon' => '#800000',
-            'navy' => '#000080',
-            'olive' => '#808000',
-            'purple' => '#800080',
-            'red' => '#FF0000',
-            'silver' => '#C0C0C0',
-            'teal' => '#008080',
-            'white' => '#FFFFFF',
-            'yellow' => '#FFFF00',
-        ];
+        // Colors table
+        $colors = [ 'aqua'      => '#00FFFF',
+                    'black'     => '#000000',
+                    'blue'      => '#0000FF',
+                    'fuchsia'   => '#FF00FF',
+                    'gray'      => '#808080',
+                    'green'     => '#008000',
+                    'lime'      => '#00FF00',
+                    'maroon'    => '#800000',
+                    'navy'      => '#000080',
+                    'olive'     => '#808000',
+                    'purple'    => '#800080',
+                    'red'       => '#FF0000',
+                    'silver'    => '#C0C0C0',
+                    'teal'      => '#008080',
+                    'white'     => '#FFFFFF',
+                    'yellow'    => '#FFFF00' ];
 
-        return view( 'imgcolors.index' )->with('table_colors', $colors);
+        return view( 'imgcolors.index' )->with( 'table_colors', $colors );
     }
 
     /**
-     * Get image from request, generates color palette from it,
-     * compare the predominant color of the image to predefined colors
-     * and return which of them is closest to predominant color of the image.
+     * Extracts predominant color (only that one) of an image in hexadecimal value.
+     * Compare extracted color with 16 colors array and return closest one.
+     *
+     * E.g: Extracted color #9F978A is closest to #C0C0C0 of the $colors array.
      *
      * @param ImageStoreRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      * @throws \ImagickPixelException
      */
     public function extractImgColor(ImageStoreRequest $request)
     {
         //TODO: Fer servir l'ImageStoreRequest per passar validació
 
-        $validation = Validator::make($request->all(), [
+        $validation = Validator::make( $request->all(), [
             'input_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
+        ] );
 
+        // File it's an image
         if( $validation->passes() ) {
-            $img_path = $request->file( 'input_img' )->store(config('filesystems.imagescolors'));
+            $img_path = $request->file( 'input_img' )->store( config( 'filesystems.imagescolors' ) );
 
-            // Create in memory
-            $image = Image::make($img_path)->resize(300,300);
+            // Creates copy of image
+            $image = Image::make( $img_path )->resize( 300,300 );
 
-            // Extract palette from filename and create assoc array
+            // Obtains an array with complete palette of the image,
+            // but they not formatted in RGB or Hex
             $raw_palette = Palette::fromFilename( $img_path );
-            $raw_most_used = $raw_palette->getMostUsedColors( 1 );
 
-            foreach($raw_most_used as $color => $count) {
-                $most_used = ['pixels' => $count,
-                    'color' => Color::fromIntToHex($color)];
+            // Get most used color from the palette (Not formatted yet)
+            $raw_most_used_color = $raw_palette->getMostUsedColors( 2 );
+
+            // Constructs an array with the key 'color' and value 'pixels':
+            // 'color':  The most used color code of the image, parsed to Hexadecimal
+            // 'pixels': Counts total pixels of that predominant color has got the image.
+            $most_used_color = [];
+
+            foreach( $raw_most_used_color as $color => $count ) {
+                $most_used_color = [ 'color'  => Color::fromIntToHex($color),
+                                     'pixels' => $count ];
             }
 
-            // Colors to match
-            $colors = ['aqua' => '#00FFFF',
-                'black' => '#000000',
-                'blue' => '#0000FF',
-                'fuchsia' => '#FF00FF',
-                'gray' => '#808080',
-                'green' => '#008000',
-                'lime' => '#00FF00',
-                'maroon' => '#800000',
-                'navy' => '#000080',
-                'olive' => '#808000',
-                'purple' => '#800080',
-                'red' => '#FF0000',
-                'silver' => '#C0C0C0',
-                'teal' => '#008080',
-                'white' => '#FFFFFF',
-                'yellow' => '#FFFF00',
-            ];
+            // Colors which most used color of the image will be compared
+            $colors = [ 'aqua'      => '#00FFFF',
+                        'black'     => '#000000',
+                        'blue'      => '#0000FF',
+                        'fuchsia'   => '#FF00FF',
+                        'gray'      => '#808080',
+                        'green'     => '#008000',
+                        'lime'      => '#00FF00',
+                        'maroon'    => '#800000',
+                        'navy'      => '#000080',
+                        'olive'     => '#808000',
+                        'purple'    => '#800080',
+                        'red'       => '#FF0000',
+                        'silver'    => '#C0C0C0',
+                        'teal'      => '#008080',
+                        'white'     => '#FFFFFF',
+                        'yellow'    => '#FFFF00' ];
 
-            // Return value
+            // The closest hex color from the $color array
             $closest_color = '';
 
-            // Distance to color
+            // Distance to $color values
             $distance = 0.23;
 
-            // Search matching
+            // Makes the comparison between most used color and $color array
             foreach( $colors as $name => $hex ) {
-                $color1 = new \ImagickPixel($most_used['color']);
+                $color1 = new \ImagickPixel( $most_used_color['color'] );
                 $color2 = new \ImagickPixel( $hex );
 
                 if( $color1->isPixelSimilar( $color2, $distance ) ) {
@@ -110,17 +118,17 @@ class ImageColorExtractorController extends Controller
             }
 
             // JSONize response data
-            $response = response()->json([
+            $response = response()->json( [
                 'message'           => 'Image has uploaded successfully',
                 'img_name'          => $image->basename,
                 'img_file'          => '<img id="img_file" src="'.config('filesystems.imagescolors')
                                                                  .'/' .$image->basename
                                                                  . '" class="img-thumbnail"width="300" />',
                 'table_colors'      => $colors,
-                'predominant_color' => $most_used['color'],
+                'predominant_color' => $most_used_color['color'],
                 'closest_color'     => $closest_color,
                 'class_name'        => 'alert-success'
-            ]);
+            ] );
 
             // Destroy actual image from server storage
             //unlink( $request->file( 'input_img' )->store(config('filesystems.imagescolors')));
@@ -130,11 +138,13 @@ class ImageColorExtractorController extends Controller
         }
         // File is not valid
         else {
-            return response()->json([
+            $response = response()->json( [
                 'message'        => $validation->errors()->all(),
                 'uploaded_image' => '',
                 'class_name'     => 'alert-danger'
-            ]);
+            ] );
+
+            return $response;
         }
     }
 

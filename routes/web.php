@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,16 +11,16 @@ use Illuminate\Http\Request;
 |
 */
 
-# Entrance app
-Route::get('/', 'ImageColorExtractorController@index');
+# Entrance app route
+Route::get( '/', 'ImageColorExtractorController@index' );
 
 # Operations
 //Route::resource( 'images', 'ImageColorExtractorController' );
 
-# Submit form to server via AJAX
-Route::post('/action', 'ImageColorExtractorController@extractImgColor')->name('extractimgcolor.action');
+# Submits form to server via AJAX. See 'index.blade.php' for detail
+Route::post( '/action', 'ImageColorExtractorController@extractImgColor' )->name( 'extractimgcolor.action' );
 
 # Fallback
 Route::fallback( function() {
-    return redirect('/');
+    return redirect( '/' );
 });

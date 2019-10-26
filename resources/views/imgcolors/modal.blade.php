@@ -1,4 +1,4 @@
-@section('modal')
+@section( 'modal' )
     <div id="myModal" class="modal">
         {{-- Close button --}}
         <span class="close-modal">&times;</span>
