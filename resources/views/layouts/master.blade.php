@@ -14,6 +14,9 @@
     <body class="container p-3">
         <h2>@yield( 'page_title' )</h2>
 
+        {{-- Modal --}}
+        @extends( 'imgcolors.modal' )
+
         {{-- Main content --}}
         @yield( 'content' )
 

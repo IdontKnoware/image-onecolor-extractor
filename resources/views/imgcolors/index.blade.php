@@ -1,17 +1,14 @@
 @extends( 'layouts.master' )
     @section( 'content' )
 
-        <h3 align="center">Extract predominant color of an image using Laravel</h3>
+        <h3 align="center">Extract dominant color of an image using Laravel</h3>
         <br><br>
         <div class="container-fluid">
-
-            @extends( 'imgcolors.modal' )
-
             <div class="row">
                 <div class="col-md-6 border table-responsive-sm table-responsive-md"
                      style="text-align: center;">
                     {{-- Predominant color title and uploaded image --}}
-                    <h4 id="predominant_color" style="padding:15px;">No image uploaded</h4>
+                    <h4 id="dominant_color" style="padding:15px;">No image uploaded</h4>
                     <span id="span_img_file"></span>
                 </div>
 
@@ -44,6 +41,8 @@
                 </div>
             </div>
             <br><br>
+
+            {{-- Info/Error message & image form --}}
             <span class="alert" id="message" style="display: none"></span>
             <form id="img_form" class="" method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
@@ -55,7 +54,7 @@
                             <input type="file" class="" name="input_img"
                                    id="input_img" accept="image/*" required>
                             <button id="submit_form" type="submit"
-                                    class="upload-button">Extract predominant color</button>
+                                    class="upload-button">Extract dominant color</button>
                         </div>
                     </div>
                 </div>
@@ -83,11 +82,11 @@
 
                     request.done(function ( data ) {
                         // Title above uploaded image
-                        $( '#predominant_color' ).html(
+                        $( '#dominant_color' ).html(
                             'Predominant color: ' +
-                            '<span ' + 'style="background-color: ' + data.predominant_color + '; ' +
+                            '<span ' + 'style="background-color: ' + data.dominant_color + '; ' +
                             'padding: ' + '5px; ' +
-                            'color: white;">' + data.predominant_color +
+                            'color: white;">' + data.dominant_color +
                             '</span>'
                         );
 
@@ -95,7 +94,7 @@
                         $( '#span_img_file' ).html( data.img_file );
 
                         // Title above colors table
-                        $( '#color_compare' ).html( data.predominant_color + ' is closest to ' +
+                        $( '#color_compare' ).html( data.dominant_color + ' is closest to ' +
                             data.closest_color );
 
                         // Info message

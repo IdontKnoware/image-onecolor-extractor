@@ -12,7 +12,8 @@
         "laravel/tinker": "^1.0",
         "league/color-extractor": "0.3.*",
         "ext-imagick": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-gd": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

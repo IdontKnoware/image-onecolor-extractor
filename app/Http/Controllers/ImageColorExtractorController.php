@@ -55,11 +55,6 @@ class ImageColorExtractorController extends Controller
         // File it's an image
         if( $request->validated() ) {
 
-            // Empties out storage directory before storages new files
-            if( count( scandir( config( 'filesystems.imagescolors' ) ) ) > 1 ) {
-                array_map('unlink', glob(config( 'filesystems.imagescolors' )."/*.*" ));
-            }
-
             $img_path = $request->file( 'input_img' )->store( config( 'filesystems.imagescolors' ) );
 
             // Creates copy of image
@@ -75,40 +70,40 @@ class ImageColorExtractorController extends Controller
             // Constructs an array with the key 'color' and value 'pixels':
             // 'color':  The most used color code of the image, parsed to Hexadecimal
             // 'pixels': Counts total pixels of that predominant color has got the image.
-            $most_used_color = [];
+            $dominant_color = [];
 
             foreach( $raw_most_used_color as $color => $count ) {
-                $most_used_color = [ 'color'  => Color::fromIntToHex($color),
-                                     'pixels' => $count ];
+                $dominant_color = [ 'color'  => Color::fromIntToHex($color),
+                                    'pixels' => $count ];
             }
 
             // Colors which most used color of the image will be compared
             $colors = [ 'aqua'      => '#00FFFF',
                         'black'     => '#000000',
                         'blue'      => '#0000FF',
+                        'white'     => '#FFFFFF',
                         'fuchsia'   => '#FF00FF',
                         'gray'      => '#808080',
+                        'teal'      => '#008080',
                         'green'     => '#008000',
                         'lime'      => '#00FF00',
                         'maroon'    => '#800000',
+                        'silver'    => '#C0C0C0',
                         'navy'      => '#000080',
                         'olive'     => '#808000',
                         'purple'    => '#800080',
                         'red'       => '#FF0000',
-                        'silver'    => '#C0C0C0',
-                        'teal'      => '#008080',
-                        'white'     => '#FFFFFF',
                         'yellow'    => '#FFFF00' ];
 
             // The closest hex color from the $color array
             $closest_color = '';
 
             // Distance to $color values
-            $distance = 0.23;
+            $distance = 0.2;
 
             // Makes the comparison between most used color and $color array
             foreach( $colors as $name => $hex ) {
-                $color1 = new \ImagickPixel( $most_used_color['color'] );
+                $color1 = new \ImagickPixel( $dominant_color['color'] );
                 $color2 = new \ImagickPixel( $hex );
 
                 if( $color1->isPixelSimilar( $color2, $distance ) ) {
@@ -126,7 +121,7 @@ class ImageColorExtractorController extends Controller
                                                                  .'/' .$image->basename
                                                                  . '" class="img-thumbnail"width="300" />',
                 'table_colors'      => $colors,
-                'predominant_color' => $most_used_color['color'],
+                'dominant_color'    => $dominant_color['color'],
                 'closest_color'     => $closest_color,
                 'class_name'        => 'alert-success'
             ] );
@@ -137,80 +132,5 @@ class ImageColorExtractorController extends Controller
             // Return response to AJAX call
             return $response;
         }
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(ImageStoreRequest $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Asks for delete confirmation before destroy resource from DB.
-     *
-     */
-    public function delete()
-    {
-        //
     }
 }
