@@ -1,0 +1,21 @@
+@mixin upload-button {
+    display: inline-block;
+    text-decoration: none;
+    padding: .5em 1em;
+    border-radius: 5px;
+    background: $blue;
+    border-color: $blue;
+    color: $white;
+    font-size: 16px;
+
+    &:hover {
+        background: $green;
+        border-color: $green;
+        cursor: pointer;
+    }
+}
+
+.upload-button {
+    @include upload-button;
+}
+

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class RedirectToCreate
+class CheckImagesColorsDir
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,11 @@ class RedirectToCreate
      */
     public function handle($request, Closure $next)
     {
-        if($request->getRequestUri() != '/public/images'){
-            redirect()->action('ImageColorExtractorController@create');
+        // Empties out storage directory before storage new files
+        if( count( scandir( config( 'filesystems.imagescolors' ) ) ) > 1 ) {
+            array_map('unlink', glob(config( 'filesystems.imagescolors' )."/*.*" ));
         }
+
         return $next($request);
     }
 }

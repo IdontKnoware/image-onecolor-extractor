@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,15 +11,14 @@ use Illuminate\Http\Request;
 |
 */
 
-# Home
-Route::get('/', function () {
-    return view('imgcolors.create');
-});
+# Entrance app route
+Route::get( '/', 'ImageColorExtractorController@index' );
 
-# Image color operations
-Route::resource( 'images', 'ImageColorExtractorController' )->middleware('deny');
+# Submits form to server via AJAX. See 'index.blade.php' for detail
+Route::post( '/action', 'ImageColorExtractorController@extractImgColor' )->name( 'extractimgcolor.action' )
+                                                                         ->middleware( 'checkimgcolordir' );
 
-# To home if not found
+# Fallback
 Route::fallback( function() {
-    return redirect('/');
+    return redirect( '/' );
 });
